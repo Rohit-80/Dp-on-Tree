@@ -1,0 +1,131 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
+// using namespace __gnu_pbds;
+
+using   ll = long long ;
+
+// template<class T> using ordered_set =tree<pair<ll,ll>, null_type, less<pair<ll,ll>>, rb_tree_tag,tree_order_statistics_node_update> ;
+
+
+
+#define All(x)       sort(x.begin(), x.end());
+#define all(x)       reverse(x.begin(),x.end());
+#define A_ll(x)      x.begin(),x.end()
+#define endl         "\n";
+#define nl           cout<<"\n";
+#define work         cout<<"work"<<endl;
+#define show(x)      { for(auto a  : x) cout<<a<<" "; cout<<endl;}
+#define rep(a,b,c)   for(int a = b ; a < c; a++)
+#define sz(x)        to_string(x).length()
+
+
+
+const int N = 5e4 + 7, mod = 1e9 + 7;
+
+
+
+// const ll N = 1e6;
+vector<ll> Adj[N];
+ll val[N];
+bool vis[N];
+ll n, k;
+ll dp[N][101];
+ll sz[N];
+ll ans = 0;
+// int mod = 1e9 + 7;
+
+void dfs(ll u, ll p) {
+
+
+    vis[u] = true;
+
+    dp[u][val[u]] = 1;
+    for (auto v : Adj[u]) {
+        if (v != p) {
+            if (!vis[v]) {
+                dfs(v, u);
+                vector<ll> temp(101, 0);
+                for (ll j = 0; j <= k; j++) {
+
+                    for (ll l = 0; j + l <= k; l++) {
+                        if (j + l <= 100)
+                            temp[j + l] = (temp[j + l] % mod + (dp[u][j] * dp[v][l]) % mod) % mod;
+                    }
+
+                }
+                for (ll i = 0; i < 101; i++) {
+                    dp[u][i] = (dp[u][i] % mod + temp[i] % mod) % mod;
+                }
+
+            }
+
+
+        }
+    }
+
+}
+
+
+
+void test() {
+    cin >> n >> k;
+    for (int i = 0 ; i < N ; i++) {
+        Adj[i].clear();
+        val[i] = 0;
+        vis[i] = false;
+
+    }
+    memset(dp, 0, sizeof(dp));
+    for (int i = 0 ; i < n; i++) cin >> val[i + 1];
+
+    for (ll i = 0 ; i < n - 1; i++) {
+        int u, v; cin >> u >> v;
+
+        Adj[u].push_back(v);
+        Adj[v].push_back(u);
+
+    }
+    dfs(1, -1);
+
+
+    ll ans = 0;
+
+    for (int i = 1 ; i <= n; i++) {
+        ans = (ans % mod + dp[i][k] % mod) % mod;
+    }
+    cout << ans << endl;
+}
+
+
+
+
+
+
+
+int main() {
+
+ 
+    ios_base::sync_with_stdio(false); cin.tie(NULL);
+    // auto start = std::chrono::high_resolution_clock::now();
+    
+     
+    ll t = 1;
+    
+    cin>>t;
+    int T = 1;
+     
+        while(t--){ 
+            // cout<<"Case "<<T++<<": ";
+             test();
+         }
+           
+ 
+    
+    // auto stop = std::chrono::high_resolution_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+    // cerr << "T_taken : " << ((long double)duration.count()) / ((long double) 1e9) << "s " << endl;
+    return 0;
+}
